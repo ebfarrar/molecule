@@ -29,12 +29,17 @@ exports.classifyMolecule = function(body, res, next) {
       return payload;
     }
 
-    // If no parameters/message body supplied then return an error response.
+    // Send JSON reply to HTTP client.
+    function reply(message, code) {
+      utils.writeJson(res, message, code);
+    }
+
+    // Return an error if no parameters were supplied.
     if (!body || (typeof body.weight === "undefined")) {
-      utils.writeJson(
-        res,
-        buildErrorResponse("CLIENT ERROR"),
-        400);
+      console.log("Parameters not supplied");
+
+      // Set HTTP status code to 400 and send error response.
+      reply(buildErrorResponse("CLIENT ERROR"), 400);
 
       return;
     }
@@ -43,49 +48,46 @@ exports.classifyMolecule = function(body, res, next) {
 
     // Return error if the "weight" isn't a number or is less than 1.
     if (isNaN(moleculeWeight)) {
-      // Set HTTP status code to 400 and send error response.
-      utils.writeJson(
-        res,
-        buildErrorResponse("CLIENT ERROR"),
-        400);
+      console.log("No weight was supplied");
 
-        return;
-    } else if (moleculeWeight < 1) {
       // Set HTTP status code to 400 and send error response.
-      utils.writeJson(
-        res,
-        buildErrorResponse("CLIENT ERROR"),
-        400);
+      reply(buildErrorResponse("CLIENT ERROR"), 400);
+
+      return;
+    } else if (moleculeWeight < 1) {
+      console.log("Invalid weight: " + moleculeWeight);
+
+      // Set HTTP status code to 400 and send error response.
+      reply(buildErrorResponse("CLIENT ERROR"), 400);
 
       return;
     }
 
-    // Is the molecular weight a multiple of 3?
-    const isMultipleThree = (moleculeWeight % 3 == 0);
+    // Is the molecule weight a multiple of 3?
+    const isMultipleOfThree = (moleculeWeight % 3 == 0);
 
-    // Is the molecular weight a multiple of 5?
-    const isMultipleFive = (moleculeWeight % 5 == 0);
+    // Is the molecule weight a multiple of 5?
+    const isMultipleOfFive = (moleculeWeight % 5 == 0);
 
-    var molecularType;
+    // PROTEIN, CARBOHYDRATE, LIPID, or NUCLEIC ACID?
+    var moleculeType;
 
-    // If the molecular weight is a multiple of 3 then the molecule is a protein.  If the 
-    // molecular weight is a multiple of 5 then the molecule is a carbohydrate.  If the
-    // weight is a multiple of both 3 and 5 then the molecule is a lipid.  All other
-    // molecules are classified as nucleic acids. 
-    if (isMultipleThree && isMultipleFive) {
-      molecularType = "LIPID";
-    } else if (isMultipleThree) {
-      molecularType = "PROTEIN";
-    } else if (isMultipleFive) {
-      molecularType = "CARBOHYDRATE";
+    // If the molecular weight is a multiple of 3 then the molecule is a
+    // protein.  If the molecular weight is a multiple of 5 then the molecule
+    // is a carbohydrate.  If the weight is a multiple of both 3 and 5 then
+    // the molecule is a lipid.  All other molecules are classified
+    // as nucleic acids. 
+    if (isMultipleOfThree && isMultipleOfFive) {
+      moleculeType = "LIPID";
+    } else if (isMultipleOfThree) {
+      moleculeType = "PROTEIN";
+    } else if (isMultipleOfFive) {
+      moleculeType = "CARBOHYDRATE";
     } else {
-      molecularType = "NUCLEIC ACID";
+      moleculeType = "NUCLEIC ACID";
     }
 
-    // Set HTTP status code to 200 and send the weight and the classification.
-    utils.writeJson(
-      res,
-      buildSuccessResponse(moleculeWeight, molecularType),
-      200);
+    // Set HTTP status code to 200 and send the weight and classification.
+    reply(buildSuccessResponse(moleculeWeight, moleculeType), 200);
 }
 

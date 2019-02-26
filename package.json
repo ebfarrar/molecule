@@ -1,0 +1,27 @@
+{
+  "name": "molecule-classifier",
+  "version": "1.0.0",
+  "description": "This API classifies molecules as proteins, carbohydrates or lipids based on the \"weight\" of the molecule. Molecules with weights that are multiples of 3 shall be classified as proteins. Molecules with weights that are multiples of 5 shall be classified as carbohydrates. Molecules with weights that are both multiples of both 3 and 5 shall be classified as lipids. In any other case the molecule shall be classified as a nucleic acid.",
+  "main": "index.js",
+  "scripts": {
+    "prestart": "npm install",
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ebfarrar/molecule.git"
+  },
+  "keywords": [
+    "swagger",
+    "api",
+    "json"
+  ],
+  "author": "Eric Farrar",
+  "license": "Unlicense",
+  "private": true,
+  "dependencies": {
+    "connect": "^3.2.0",
+    "js-yaml": "^3.3.0",
+    "swagger-tools": "0.10.1"
+  }
+}

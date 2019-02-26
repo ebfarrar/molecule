@@ -22,11 +22,10 @@ exports.classifyMolecule = function(body, res, next) {
     }
 
     // Build a "FAILURE" payload.
-    function buildErrorResponse(message, type) {
+    function buildErrorResponse(message) {
       var payload = {};
       payload.message = message;
-      payload.type = type;
- 
+
       return payload;
     }
 
@@ -34,7 +33,7 @@ exports.classifyMolecule = function(body, res, next) {
     if (!body || (typeof body.weight === "undefined")) {
       utils.writeJson(
         res,
-        buildErrorResponse("Parameters not supplied", "CLIENT ERROR"),
+        buildErrorResponse("CLIENT ERROR"),
         400);
 
       return;
@@ -47,7 +46,7 @@ exports.classifyMolecule = function(body, res, next) {
       // Set HTTP status code to 400 and send error response.
       utils.writeJson(
         res,
-        buildErrorResponse("No weight was supplied", "CLIENT ERROR"),
+        buildErrorResponse("CLIENT ERROR"),
         400);
 
         return;
@@ -55,7 +54,7 @@ exports.classifyMolecule = function(body, res, next) {
       // Set HTTP status code to 400 and send error response.
       utils.writeJson(
         res,
-        buildErrorResponse(`Invalid weight: ${moleculeWeight}`, "CLIENT ERROR"),
+        buildErrorResponse("CLIENT ERROR"),
         400);
 
       return;

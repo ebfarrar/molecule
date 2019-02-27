@@ -13,20 +13,18 @@ var utils = require('../utils/writer.js');
 exports.classifyMolecule = function(body, res, next) {
 
     // Build a "SUCCESS" payload.
-    function buildSuccessResponse(weight, type) {
-      var payload = {};
-      payload.weight = weight;
-      payload.type = type;
- 
-      return payload;
+    function buildSuccessResponse(weightValue, typeValue) {
+      return {
+        weight : weightValue,
+        type : typeValue
+      };
     }
 
     // Build a "FAILURE" payload.
-    function buildErrorResponse(message) {
-      var payload = {};
-      payload.message = message;
-
-      return payload;
+    function buildErrorResponse(messageValue) {
+      return {
+        message : messageValue
+      };
     }
 
     // Send JSON reply to HTTP client.
@@ -89,5 +87,5 @@ exports.classifyMolecule = function(body, res, next) {
 
     // Set HTTP status code to 200 and send the weight and classification.
     reply(buildSuccessResponse(moleculeWeight, moleculeType), 200);
-}
+};
 

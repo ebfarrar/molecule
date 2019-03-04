@@ -68,7 +68,7 @@ exports.classifyMolecule = function(body, res, next) {
     const isMultipleOfFive = (moleculeWeight % 5 == 0);
 
     // PROTEIN, CARBOHYDRATE, LIPID, or NUCLEIC ACID?
-    var moleculeType;
+    let moleculeType;
 
     // If the molecular weight is a multiple of 3 then the molecule is a
     // protein.  If the molecular weight is a multiple of 5 then the molecule

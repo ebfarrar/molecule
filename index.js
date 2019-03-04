@@ -3,6 +3,8 @@
 
 // Main entry point into Molecule Classifier application.
 
+var app;
+
 // File System module.
 const fs = require('fs');
 
@@ -13,7 +15,7 @@ const path = require('path');
 const http = require('http');
 
 // Connect HTTP server framework module.
-const app = require('connect')();
+const connect = require('connect')();
 
 // Swagger tools library module.
 const swaggerTools = require('swagger-tools');
@@ -40,21 +42,23 @@ var swaggerDoc = jsyaml.safeLoad(spec);
 swaggerTools.initializeMiddleware(swaggerDoc, function (middleware) {
 
   // Interpret Swagger resources and attach metadata to request - must be first in swagger-tools middleware chain
-  app.use(middleware.swaggerMetadata());
+  connect.use(middleware.swaggerMetadata());
 
   // Validate Swagger requests
-  app.use(middleware.swaggerValidator());
+  connect.use(middleware.swaggerValidator());
 
   // Route validated requests to appropriate controller
-  app.use(middleware.swaggerRouter(options));
+  connect.use(middleware.swaggerRouter(options));
 
   // Serve the Swagger documents and Swagger UI
-  app.use(middleware.swaggerUi());
-
-  // Start the server
-  http.createServer(app).listen(serverPort, function () {
-    console.log('Your server is listening on port %d (http://localhost:%d)', serverPort, serverPort);
-    console.log('Swagger-ui is available on http://localhost:%d/docs', serverPort);
-  });
-
+  connect.use(middleware.swaggerUi());
 });
+
+// Start the server
+app = http.createServer(connect).listen(serverPort, function () {
+  console.log('Your server is listening on port %d (http://localhost:%d)', serverPort, serverPort);
+  console.log('Swagger-ui is available on http://localhost:%d/docs', serverPort);
+});
+
+module.exports = app;
+
